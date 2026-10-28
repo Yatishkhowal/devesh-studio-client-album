@@ -1,0 +1,6 @@
+# Keep Linux line endings – the files run on a Linux web server
+* text=auto eol=lf
+*.jpg binary
+*.png binary
+*.pdf binary
+*.zip binary

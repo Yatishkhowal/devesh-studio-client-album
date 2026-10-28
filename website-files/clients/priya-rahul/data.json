@@ -1,0 +1,26 @@
+{
+    "username": "priyarahul",
+    "password": "gulab-sitara-4826",
+    "enabled": true,
+    "bride": "Priya",
+    "groom": "Rahul",
+    "wedding_date": "2026-02-14",
+    "venue": "Shubh Mangal Vatika",
+    "city": "Jaipur",
+    "events": ["Haldi", "Mehendi", "Wedding", "Reception"],
+    "message": "",
+    "cover": "cover.jpg",
+    "pdf": "album.pdf",
+    "pdf_layout": "auto",
+    "allow_download": true,
+    "watermark": false,
+    "videos": [
+        {
+            "title": "Sample Film · Devesh Studio",
+            "type": "youtube",
+            "src": "https://youtu.be/6puC3QC03_c",
+            "duration": ""
+        }
+    ],
+    "created": "2026-10-28"
+}

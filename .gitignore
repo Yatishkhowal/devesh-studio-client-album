@@ -1,0 +1,11 @@
+# Local tool settings (paths on this computer only)
+.claude/
+
+# Upload zip – rebuilt from website-files/ with tar.exe (see CLAUDE.md)
+website-files.zip
+
+# Data the app writes while running: sessions, admin password, login attempts, half uploads, image caches
+website-files/clients/_data/
+website-files/clients/*/_cache/
+*.part
+*.tmp
