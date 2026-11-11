@@ -376,9 +376,15 @@ function onFullscreenChange() {
 document.addEventListener('fullscreenchange', onFullscreenChange);
 document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
+/* Toolbar icons are <svg><use href="…/icons.svg#i-NAME"> – swap the symbol, keep the file. */
+function setIcon(btn, name) {
+    const use = btn.querySelector('use');
+    if (use) use.setAttribute('href', use.getAttribute('href').split('#')[0] + '#i-' + name);
+}
+
 function setFullscreenButton(on) {
     const btn = toolbar.querySelector('[data-book="fullscreen"]');
-    btn.firstElementChild.className = on ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+    setIcon(btn, on ? 'minimize' : 'maximize');
     btn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
 }
 
@@ -388,7 +394,7 @@ function setSoundButton() {
     const btn = toolbar.querySelector('[data-book="sound"]');
     btn.classList.toggle('is-off', !soundOn);
     btn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
-    btn.firstElementChild.className = soundOn ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+    setIcon(btn, soundOn ? 'volume' : 'volume-x');
 }
 
 function playFlipSound() {

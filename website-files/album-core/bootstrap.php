@@ -8,7 +8,7 @@
 define('ALBUM_ROOT', dirname(__DIR__));
 define('CLIENTS_DIR', ALBUM_ROOT . '/clients');
 define('DATA_DIR', CLIENTS_DIR . '/_data');
-define('ASSET_VERSION', '1.0.0');
+define('ASSET_VERSION', '1.1.0');
 
 const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'webp'];
 const VIDEO_TYPES = ['mp4', 'm4v', 'mov', 'webm'];
@@ -216,6 +216,12 @@ function flower_svg(): string
     }
     return '<svg viewBox="-17 -17 34 34" width="32" height="32" aria-hidden="true">' . $petals
         . '<circle r="5.5" fill="#FFB703"/><circle r="2.2" fill="#E85D04"/></svg>';
+}
+
+/** A line icon from album-assets/img/icons.svg (the same style as the main website). */
+function icon(string $name): string
+{
+    return '<svg class="i" aria-hidden="true"><use href="album-assets/img/icons.svg?v=' . ASSET_VERSION . '#i-' . e($name) . '"/></svg>';
 }
 
 

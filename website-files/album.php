@@ -60,13 +60,12 @@ page_headers();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#FF4D8D">
-<title><?= e($names) ?> · Wedding Album · <?= e($studio) ?></title>
+<meta name="theme-color" content="#0d0a08">
+<title><?= e($names) ?> · eAlbum · <?= e($studio) ?></title>
 <link rel="icon" href="<?= e(cfg('favicon')) ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Josefin+Sans:wght@300;400;600;700&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 <link rel="stylesheet" href="album-assets/css/album.css?v=<?= $v ?>">
 </head>
@@ -74,8 +73,8 @@ page_headers();
 
 <header class="topbar" id="topbar">
     <a class="brand" href="#top">
-        <img src="<?= e(cfg('logo')) ?>" alt="" onerror="this.remove()">
-        <span><?= e($studio) ?></span>
+        <span class="brand-badge"><?= icon('aperture') ?></span>
+        <span class="brand-name"><?= e($studio) ?></span>
     </a>
     <nav class="top-links" aria-label="Album sections">
         <a href="#album">Album</a>
@@ -83,9 +82,9 @@ page_headers();
         <a href="#photos">Photos</a>
     </nav>
     <?php if ($preview): ?>
-        <a class="btn-logout" href="admin.php?view=edit&amp;c=<?= e(rawurlencode($client['slug'])) ?>"><i class="fa-solid fa-arrow-left"></i><span>Back to admin</span></a>
+        <a class="btn-logout" href="admin.php?view=edit&amp;c=<?= e(rawurlencode($client['slug'])) ?>"><?= icon('arrow-left') ?><span>Back to admin</span></a>
     <?php else: ?>
-        <a class="btn-logout" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+        <a class="btn-logout" href="logout.php"><?= icon('logout') ?><span>Log out</span></a>
     <?php endif; ?>
 </header>
 
@@ -95,7 +94,7 @@ page_headers();
         <?php if ($coverFile): ?>
             <img class="hero-img" src="<?= e(media_url('cover', ['v' => filemtime($coverFile)])) ?>" alt="" fetchpriority="high">
         <?php endif; ?>
-        <div class="toran" aria-hidden="true"></div>
+        <span class="grain" aria-hidden="true"></span>
         <canvas class="petals" id="petals" aria-hidden="true"></canvas>
 
         <div class="hero-content">
@@ -103,7 +102,7 @@ page_headers();
             <h1 class="couple-names">
                 <?php if (trim((string) $client['bride']) !== '' && trim((string) $client['groom']) !== ''): ?>
                     <span class="name"><?= e(trim((string) $client['bride'])) ?></span>
-                    <i class="fa-solid fa-heart heart" aria-label="and"></i>
+                    <span class="heart" role="img" aria-label="and"><?= icon('heart') ?></span>
                     <span class="name"><?= e(trim((string) $client['groom'])) ?></span>
                 <?php else: ?>
                     <span class="name"><?= e($names) ?></span>
@@ -112,8 +111,8 @@ page_headers();
 
             <?php if ($date !== '' || $place !== ''): ?>
                 <div class="hero-meta">
-                    <?php if ($date !== ''): ?><span><i class="fa-regular fa-calendar"></i><?= e($date) ?></span><?php endif; ?>
-                    <?php if ($place !== ''): ?><span><i class="fa-solid fa-location-dot"></i><?= e($place) ?></span><?php endif; ?>
+                    <?php if ($date !== ''): ?><span><?= icon('calendar') ?><?= e($date) ?></span><?php endif; ?>
+                    <?php if ($place !== ''): ?><span><?= icon('pin') ?><?= e($place) ?></span><?php endif; ?>
                 </div>
             <?php endif; ?>
 
@@ -130,16 +129,15 @@ page_headers();
             <?php endif; ?>
         </div>
 
-        <a class="scroll-down" href="#album"><span>Scroll down</span><i class="fa-solid fa-chevron-down"></i></a>
+        <a class="scroll-down" href="#album"><span>Scroll down</span><?= icon('chevron-down') ?></a>
     </section>
 
     <!-- ============ 2. PDF album as a book ============ -->
     <section class="section section-book" id="album">
         <div class="section-head reveal">
             <span class="kicker">Flip through</span>
-            <h2>Your Wedding Album</h2>
-            <div class="divider"><?= flower_svg() ?></div>
-            <p>Turn the pages just like a real album – drag a page corner, swipe, or use the arrows.</p>
+            <h2>Your wedding album<span class="dot">.</span></h2>
+            <p>Turn the pages just like a real album: drag a page corner, swipe, or use the arrows.</p>
         </div>
 
         <?php if ($pdfFile): ?>
@@ -154,30 +152,30 @@ page_headers();
                 </div>
 
                 <div class="book-error" id="bookError" hidden>
-                    <i class="fa-solid fa-book-open"></i>
+                    <span class="soft-ic"><?= icon('book') ?></span>
                     <p>Sorry, the album could not be opened right now. Please refresh the page.</p>
                     <?php if ($pdfDownload !== ''): ?>
-                        <a class="btn-soft" href="<?= e($pdfDownload) ?>"><i class="fa-solid fa-download"></i> Download the PDF instead</a>
+                        <a class="btn-soft" href="<?= e($pdfDownload) ?>"><?= icon('download') ?>Download the PDF instead</a>
                     <?php endif; ?>
                 </div>
 
                 <div class="book-toolbar" id="bookToolbar" hidden>
-                    <button class="tb-btn" type="button" data-book="prev" aria-label="Previous page" title="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="tb-btn" type="button" data-book="prev" aria-label="Previous page" title="Previous page"><?= icon('chevron-left') ?></button>
                     <span class="book-count" aria-live="polite"><b id="pageNow">1</b> / <span id="pageTotal">1</span></span>
-                    <button class="tb-btn" type="button" data-book="next" aria-label="Next page" title="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="tb-btn" type="button" data-book="next" aria-label="Next page" title="Next page"><?= icon('chevron-right') ?></button>
                     <span class="tb-sep" aria-hidden="true"></span>
-                    <button class="tb-btn" type="button" data-book="zoom" aria-label="Zoom into this page" title="Zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
-                    <button class="tb-btn" type="button" data-book="fullscreen" aria-label="Full screen" title="Full screen"><i class="fa-solid fa-expand"></i></button>
-                    <button class="tb-btn" type="button" data-book="sound" aria-label="Page turn sound" aria-pressed="true" title="Page turn sound"><i class="fa-solid fa-volume-high"></i></button>
+                    <button class="tb-btn" type="button" data-book="zoom" aria-label="Zoom into this page" title="Zoom"><?= icon('zoom') ?></button>
+                    <button class="tb-btn" type="button" data-book="fullscreen" aria-label="Full screen" title="Full screen"><?= icon('maximize') ?></button>
+                    <button class="tb-btn" type="button" data-book="sound" aria-label="Page turn sound" aria-pressed="true" title="Page turn sound"><?= icon('volume') ?></button>
                     <?php if ($pdfDownload !== ''): ?>
-                        <a class="tb-btn" href="<?= e($pdfDownload) ?>" aria-label="Download PDF" title="Download PDF"><i class="fa-solid fa-download"></i></a>
+                        <a class="tb-btn" href="<?= e($pdfDownload) ?>" aria-label="Download PDF" title="Download PDF"><?= icon('download') ?></a>
                     <?php endif; ?>
                 </div>
-                <p class="book-hint" id="bookHint" hidden><i class="fa-regular fa-hand-pointer"></i> Tip: tap the magnifier to see a page up close.</p>
+                <p class="book-hint" id="bookHint" hidden><?= icon('info') ?>Tip: tap the magnifier to see a page up close.</p>
             </div>
         <?php else: ?>
             <div class="coming-soon reveal">
-                <i class="fa-solid fa-book-open"></i>
+                <span class="soft-ic"><?= icon('book') ?></span>
                 <h3>Your album is being designed</h3>
                 <p>We are giving your album its final touches. It will appear here very soon!</p>
             </div>
@@ -189,8 +187,7 @@ page_headers();
         <section class="section section-films" id="films">
             <div class="section-head reveal">
                 <span class="kicker">Watch again</span>
-                <h2>Your Wedding Films</h2>
-                <div class="divider"><?= flower_svg() ?></div>
+                <h2>Your wedding films<span class="dot">.</span></h2>
                 <p>Tap a film to play it.</p>
             </div>
             <div class="video-grid">
@@ -200,14 +197,14 @@ page_headers();
                             <?php if ($video['thumb'] !== ''): ?>
                                 <img src="<?= e($video['thumb']) ?>" alt="" loading="lazy">
                             <?php else: ?>
-                                <span class="video-fallback"><i class="fa-solid fa-film"></i></span>
+                                <span class="video-fallback"><?= icon('film') ?></span>
                             <?php endif; ?>
-                            <span class="play-btn" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+                            <span class="play-btn" aria-hidden="true"><?= icon('play') ?></span>
                             <span class="video-duration"<?= $video['duration'] === '' ? ' hidden' : '' ?>><?= e($video['duration']) ?></span>
                         </span>
                         <span class="video-info">
                             <span class="video-title"><?= e($video['title']) ?></span>
-                            <span class="video-meta"><i class="fa-solid fa-circle-play"></i> Tap to watch</span>
+                            <span class="video-meta"><?= icon('play') ?>Tap to watch</span>
                         </span>
                     </button>
                 <?php endforeach; ?>
@@ -219,8 +216,7 @@ page_headers();
     <section class="section section-photos" id="photos">
         <div class="section-head reveal">
             <span class="kicker">Moments</span>
-            <h2>Your Wedding Photos</h2>
-            <div class="divider"><?= flower_svg() ?></div>
+            <h2>Your wedding photos<span class="dot">.</span></h2>
             <?php if ($gallery['photos']): ?>
                 <p><?= plural(count($gallery['photos']), 'photo') ?> · tap any photo to see it big</p>
             <?php endif; ?>
@@ -240,7 +236,7 @@ page_headers();
             <noscript><p class="coming-soon">Please turn on JavaScript to see your photos.</p></noscript>
         <?php else: ?>
             <div class="coming-soon reveal">
-                <i class="fa-solid fa-camera-retro"></i>
+                <span class="soft-ic"><?= icon('camera') ?></span>
                 <h3>Your photos are on their way</h3>
                 <p>We are carefully editing every moment. Your photos will appear here soon!</p>
             </div>
@@ -250,25 +246,26 @@ page_headers();
 
 <!-- ============ 5. Footer ============ -->
 <footer class="album-footer">
-    <div class="toran toran-footer" aria-hidden="true"></div>
-    <p class="footer-thanks">Thank you for choosing <?= e($studio) ?></p>
+    <span class="footer-badge" aria-hidden="true"><?= icon('aperture') ?></span>
+    <p class="footer-thanks">Thank you for choosing <?= e($studio) ?><span class="dot">.</span></p>
     <p class="footer-sub">It was an honour to capture your special day. We would love to hear from you!</p>
     <div class="footer-social">
-        <a href="<?= e(whatsapp_link('Hello ' . $studio . '! We just saw our wedding album.')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <a href="<?= e(cfg('instagram')) ?>" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="<?= e(cfg('facebook')) ?>" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="<?= e(cfg('youtube')) ?>" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a class="wa" href="<?= e(whatsapp_link('Hello ' . $studio . '! We just saw our wedding album.')) ?>" target="_blank" rel="noopener"><?= icon('chat') ?>WhatsApp</a>
+        <a href="<?= e(cfg('instagram')) ?>" target="_blank" rel="noopener">Instagram</a>
+        <a href="<?= e(cfg('facebook')) ?>" target="_blank" rel="noopener">Facebook</a>
+        <a href="<?= e(cfg('youtube')) ?>" target="_blank" rel="noopener">YouTube</a>
     </div>
     <?php if (!$preview): ?>
-        <a class="btn-logout btn-logout-light" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+        <a class="btn-logout btn-logout-light" href="logout.php"><?= icon('logout') ?><span>Log out</span></a>
     <?php endif; ?>
-    <small>© <?= date('Y') ?> <?= e($studio) ?> · Made with love</small>
+    <small>© <?= date('Y') ?> <?= e($studio) ?></small>
+    <p class="footer-word" aria-hidden="true">DEVESH</p>
 </footer>
 
-<button class="to-top" type="button" id="toTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+<button class="to-top" type="button" id="toTop" aria-label="Back to top"><?= icon('arrow-up') ?></button>
 
 <?php if ($preview): ?>
-    <div class="preview-bar"><i class="fa-solid fa-eye"></i><span>Admin preview</span>
+    <div class="preview-bar"><?= icon('eye') ?><span>Admin preview</span>
         <a href="admin.php?view=edit&amp;c=<?= e(rawurlencode($client['slug'])) ?>">Back to admin</a></div>
 <?php endif; ?>
 

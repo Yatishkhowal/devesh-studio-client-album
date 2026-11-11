@@ -67,7 +67,7 @@
         var canvas = document.getElementById('petals');
         if (!canvas || reduceMotion || !canvas.getContext) return;
         var ctx = canvas.getContext('2d');
-        var colors = ['#FFB703', '#FB8500', '#FF4D8D', '#FF8FB1', '#FFD166', '#FFFFFF'];
+        var colors = ['#FFB23E', '#FFC35C', '#FFF5EA', '#E0401A', '#7A2208', '#FFFFFF'];   // the website's marigold, cream and deep reds
         var count = window.innerWidth < 700 ? 12 : 22;
         var items = [];
         var width = 0, height = 0, frame = 0, visible = true;
@@ -157,7 +157,7 @@
 
     /* ---------------- confetti right after login ---------------- */
     if (A.celebrate && !reduceMotion && typeof window.confetti === 'function') {
-        var palette = ['#FFB703', '#FF4D8D', '#FB8500', '#06D6A0', '#8338EC'];
+        var palette = ['#FF7A1A', '#FFB23E', '#E0401A', '#FFF5EA', '#0D0A08'];
         setTimeout(function () {
             window.confetti({ particleCount: 140, spread: 90, startVelocity: 45, origin: { y: 0.6 }, colors: palette });
             setTimeout(function () {

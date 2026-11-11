@@ -119,18 +119,21 @@ After changing CSS or JS, bump `ASSET_VERSION` in `album-core/bootstrap.php` (pa
 - **Page sound:** made with WebAudio, so there is no sound file.
 
 Pinned CDN versions:
-- **cdnjs:** jQuery 3.7.1, Fancybox 3.5.7, Font Awesome 6.5.2.
+- **cdnjs:** jQuery 3.7.1, Fancybox 3.5.7, and Font Awesome 6.5.2 (only `admin.php` still uses it).
 - **jsDelivr:** page-flip 2.0.7, pdfjs-dist 4.10.38 (legacy build), canvas-confetti 1.9.3.
-- **Google Fonts:** Josefin Sans and Great Vibes.
+- **Google Fonts:** Bricolage Grotesque and Inter on the login and album pages; Josefin Sans in the admin.
+
+**Icons (login and album).** Line icons live in `album-assets/img/icons.svg` as `<symbol id="i-NAME">`. PHP prints one with `icon('NAME')` (bootstrap.php), which references the file with `?v=ASSET_VERSION`. Scripts that change an icon swap the `<use>` href's `#i-NAME` (`setIcon()` in flipbook.js, the eye button on the login page), because an SVG's `className` can't be assigned in an ES module.
 
 ## Constraints and conventions
 
 - Keep PHP 7.4 syntax: no `match`, no `str_contains`/`str_starts_with`, no nullsafe `?->`, no named arguments, no union types.
-- Design rules from the client's brief:
-  - Great Vibes only for the couple's names; Josefin Sans for everything else.
-  - Palette: marigold `#FFB703`, pink `#FF4D8D`, orange `#FB8500`, teal `#06D6A0` and purple `#8338EC`, on cream `#FFF8EE`.
-  - The login page matches the main site's dark `#202120`.
-  - Event tag colours come from `event_tone()`, which knows common Rajasthani wedding events.
+- Design rules (changed 2026-11-11 to match the new main website in `D:\Y_Claude\devesh-home`):
+  - Bricolage Grotesque for headings and the couple's names; Inter for everything else.
+  - Palette: ink `#0d0a08` with cream `#fff5ea` text; saffron `#ff7a1a`, marigold `#ffb23e`, chilli `#e0401a` and deep `#7a2208` accents.
+  - The login page and the album banner use the website's orange "stage" (radial saffron gradient with grain); sections are dark. The cover sits in the website's rounded-top arch, and the top bar is the website's dashed pill.
+  - Event tag colours come from `event_tone()`, which knows common Rajasthani wedding events. Its pink/orange/purple/teal/yellow names are mapped in album.css to the saffron family.
+  - The admin panel (`admin.php`, `admin.css`) keeps its own earlier look.
 - Private pages send `noindex` and must never include the main site's AdSense script.
 - Keep `Referrer-Policy: strict-origin-when-cross-origin`: YouTube embeds refuse to play without a referrer.
 - The "Client Login" menu link has to be added by hand to the 7 static pages (`<nav class="annie-main-menu">`, README §2), because those files are not in this repo.
