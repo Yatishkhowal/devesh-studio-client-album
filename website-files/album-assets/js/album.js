@@ -18,13 +18,15 @@
         };
     }
 
-    /* ---------------- top bar, back-to-top, active link ---------------- */
+    /* ---------------- album bar, back-to-top, active link ---------------- */
+    // The album bar sits under the banner and then sticks to the top of the screen; once it sticks it shows the
+    // couple's names and a solid background (is-stuck).
     var topbar = document.getElementById('topbar');
     var toTop = document.getElementById('toTop');
 
     function onScroll() {
         var y = window.scrollY || window.pageYOffset;
-        topbar.classList.toggle('is-scrolled', y > 10);
+        topbar.classList.toggle('is-stuck', topbar.getBoundingClientRect().top <= 16);
         toTop.classList.toggle('is-visible', y > 700);
     }
     window.addEventListener('scroll', onScroll, { passive: true });

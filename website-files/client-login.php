@@ -1,8 +1,10 @@
 <?php
 /**
  * Client login – every wedding client opens their album with their own username and password.
+ * Laid out like the main website's inner pages: its header, an orange banner with the login card, its footer.
  */
 require_once __DIR__ . '/album-core/bootstrap.php';
+require_once __DIR__ . '/album-core/layout.php';
 
 album_session_start();
 
@@ -76,62 +78,74 @@ page_headers();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="album-assets/css/site.css?v=<?= ASSET_VERSION ?>">
 <link rel="stylesheet" href="album-assets/css/login.css?v=<?= ASSET_VERSION ?>">
 </head>
-<body>
-<div class="login-bg" aria-hidden="true">
-    <span class="grain"></span>
-    <span class="login-word">eALBUM</span>
-</div>
+<body class="login-page">
+<?php site_header(['href' => 'contact.html', 'label' => 'Get in touch', 'icon' => '']); ?>
 
-<main class="login-wrap">
-    <div class="login-card">
-        <a class="login-badge" href="<?= e(cfg('website_home')) ?>" aria-label="<?= e($studio) ?> website"><?= icon('aperture') ?></a>
+<main>
+<section class="page-hero login-hero" aria-labelledby="page-title">
+    <div class="wrap ph-grid">
+        <div class="ph-copy">
+            <nav class="crumbs" aria-label="Breadcrumb"><a href="<?= e(cfg('website_home')) ?>">Home</a><span class="sep" aria-hidden="true">/</span><a href="ealbum.html">eAlbum</a><span class="sep" aria-hidden="true">/</span><span aria-current="page">Log in</span></nav>
+            <h1 id="page-title">Welcome to your wedding album<span class="dot">.</span></h1>
+            <p class="ph-lede">Log in with the username and password shared with you by <?= e($studio) ?> to turn the pages of your album, watch your films and see every photo.</p>
+            <ul class="login-points">
+                <li><?= icon('book') ?>Your album as a flip book</li>
+                <li><?= icon('film') ?>Your wedding films</li>
+                <li><?= icon('camera') ?>Every photo, by event</li>
+            </ul>
+        </div>
 
-        <p class="eyebrow">eAlbum · <?= e($studio) ?></p>
-        <h1>Welcome to your wedding album<span class="dot">.</span></h1>
-        <p class="login-sub">Log in with the username and password shared with you by <?= e($studio) ?>.</p>
+        <div class="login-card">
+            <p class="eyebrow">eAlbum login</p>
+            <h2>Open your album<span class="dot">.</span></h2>
 
-        <?php if ($error !== ''): ?>
-            <div class="alert alert-error" role="alert"><?= icon('alert') ?><span><?= e($error) ?></span></div>
-        <?php elseif ($notice !== ''): ?>
-            <div class="alert alert-info" role="status"><?= icon('heart') ?><span><?= e($notice) ?></span></div>
-        <?php endif; ?>
+            <?php if ($error !== ''): ?>
+                <div class="alert alert-error" role="alert"><?= icon('alert') ?><span><?= e($error) ?></span></div>
+            <?php elseif ($notice !== ''): ?>
+                <div class="alert alert-info" role="status"><?= icon('heart') ?><span><?= e($notice) ?></span></div>
+            <?php endif; ?>
 
-        <form method="post" action="client-login.php" class="login-form" id="loginForm" novalidate>
-            <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
+            <form method="post" action="client-login.php" class="login-form" id="loginForm" novalidate>
+                <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
 
-            <div class="field">
-                <label for="username">Username</label>
-                <div class="field-box">
-                    <?= icon('user') ?>
-                    <input type="text" id="username" name="username" value="<?= e($username) ?>" autocomplete="username"
-                           autocapitalize="none" autocorrect="off" spellcheck="false" required <?= $username === '' ? 'autofocus' : '' ?>>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <div class="field-box">
+                        <?= icon('user') ?>
+                        <input type="text" id="username" name="username" value="<?= e($username) ?>" autocomplete="username"
+                               autocapitalize="none" autocorrect="off" spellcheck="false" required <?= $username === '' ? 'autofocus' : '' ?>>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <label for="password">Password</label>
-                <div class="field-box">
-                    <?= icon('lock') ?>
-                    <input type="password" id="password" name="password" autocomplete="current-password" required <?= $username !== '' ? 'autofocus' : '' ?>>
-                    <button type="button" class="eye" id="togglePassword" aria-label="Show password" aria-pressed="false"><?= icon('eye') ?></button>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="field-box">
+                        <?= icon('lock') ?>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required <?= $username !== '' ? 'autofocus' : '' ?>>
+                        <button type="button" class="eye" id="togglePassword" aria-label="Show password" aria-pressed="false"><?= icon('eye') ?></button>
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="btn-login" id="loginButton">
-                <span class="t">Open my album</span><span class="c"><?= icon('arrow-right') ?></span>
-            </button>
-        </form>
+                <button type="submit" class="btn-login" id="loginButton">
+                    <span class="t">Open my album</span><span class="c"><?= icon('arrow-right') ?></span>
+                </button>
+            </form>
 
-        <p class="login-help">
-            Forgot your password?
-            <a href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"><?= icon('chat') ?>Message us on WhatsApp</a>
-        </p>
-        <a class="back-link" href="<?= e(cfg('website_home')) ?>"><?= icon('arrow-left') ?>Back to website</a>
+            <p class="login-help">
+                Forgot your password?
+                <a href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"><?= icon('chat') ?>Message us on WhatsApp</a>
+            </p>
+        </div>
     </div>
+</section>
 </main>
 
+<?php site_footer(); ?>
+
+<script src="album-assets/js/site.js?v=<?= ASSET_VERSION ?>"></script>
 <script>
 (function () {
     var input = document.getElementById('password');

@@ -51,6 +51,8 @@ Har page mein Contact wali menu line dhundo:
 <li><a href="client-login.php">Client Login</a></li>
 ```
 
+**Nayi website ke saath:** login page aur album page ab nayi website ke andar ke pages jaise dikhte hain: upar website ka logo aur menu, orange banner, aur neeche website ka footer. Menu ke links nayi website ke pages kholte hain (`about.html`, `portfolio.html`, `shop.html`, `ealbum.html`, `account.html`…). Isliye eAlbum aur nayi website **ek saath upload karo**. Purani website par ye menu links nahi chalenge. Nayi website ke menu mein eAlbum pehle se hai, to upar wali "Client Login" line jodne ki zaroorat nahi.
+
 ## 3. Admin password banana (sirf pehli baar)
 
 Upload ke **turant baad** `https://deveshstudio.com/admin.php` kholo aur apna admin password banao (kam se kam 8 akshar).

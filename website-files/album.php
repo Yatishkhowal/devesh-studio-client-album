@@ -2,8 +2,10 @@
 /**
  * The private wedding album: banner, PDF flip book, films and photos.
  * Only the logged-in client – or the admin, in preview – can open it.
+ * Laid out like the main website's inner pages: its header, banner and footer around the album.
  */
 require_once __DIR__ . '/album-core/bootstrap.php';
+require_once __DIR__ . '/album-core/layout.php';
 
 album_session_start();
 
@@ -37,6 +39,10 @@ $pdfFile = $client['pdf'] !== '' ? client_file($client, (string) $client['pdf'])
 $videos = video_cards($client);
 $gallery = list_photos($client);
 $pdfDownload = $pdfFile && $client['allow_download'] ? media_url('pdf', ['v' => filemtime($pdfFile), 'dl' => 1]) : '';
+$adminBack = 'admin.php?view=edit&c=' . rawurlencode($client['slug']);
+$exit = $preview
+    ? ['href' => $adminBack, 'label' => 'Back to admin', 'icon' => 'arrow-left']
+    : ['href' => 'logout.php', 'label' => 'Log out', 'icon' => 'logout'];
 
 $albumData = [
     'pdf'           => $pdfFile ? media_url('pdf', ['v' => filemtime($pdfFile)]) : '',
@@ -67,70 +73,73 @@ page_headers();
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+<link rel="stylesheet" href="album-assets/css/site.css?v=<?= $v ?>">
 <link rel="stylesheet" href="album-assets/css/album.css?v=<?= $v ?>">
 </head>
-<body>
+<body class="album-page">
 
-<header class="topbar" id="topbar">
-    <a class="brand" href="#top">
-        <span class="brand-badge"><?= icon('aperture') ?></span>
-        <span class="brand-name"><?= e($studio) ?></span>
-    </a>
-    <nav class="top-links" aria-label="Album sections">
-        <a href="#album">Album</a>
-        <?php if ($videos): ?><a href="#films">Films</a><?php endif; ?>
-        <a href="#photos">Photos</a>
-    </nav>
-    <?php if ($preview): ?>
-        <a class="btn-logout" href="admin.php?view=edit&amp;c=<?= e(rawurlencode($client['slug'])) ?>"><?= icon('arrow-left') ?><span>Back to admin</span></a>
-    <?php else: ?>
-        <a class="btn-logout" href="logout.php"><?= icon('logout') ?><span>Log out</span></a>
-    <?php endif; ?>
-</header>
+<?php site_header($exit); ?>
 
 <main>
-    <!-- ============ 1. Banner ============ -->
-    <section class="hero" id="top">
-        <?php if ($coverFile): ?>
-            <img class="hero-img" src="<?= e(media_url('cover', ['v' => filemtime($coverFile)])) ?>" alt="" fetchpriority="high">
-        <?php endif; ?>
-        <span class="grain" aria-hidden="true"></span>
+    <!-- ============ 1. Banner: the website's inner-page banner, with the couple's cover on the right ============ -->
+    <section class="page-hero hero" id="top" aria-labelledby="couple-title">
         <canvas class="petals" id="petals" aria-hidden="true"></canvas>
 
-        <div class="hero-content">
-            <p class="hero-kicker">The wedding celebration of</p>
-            <h1 class="couple-names">
-                <?php if (trim((string) $client['bride']) !== '' && trim((string) $client['groom']) !== ''): ?>
-                    <span class="name"><?= e(trim((string) $client['bride'])) ?></span>
-                    <span class="heart" role="img" aria-label="and"><?= icon('heart') ?></span>
-                    <span class="name"><?= e(trim((string) $client['groom'])) ?></span>
-                <?php else: ?>
-                    <span class="name"><?= e($names) ?></span>
-                <?php endif; ?>
-            </h1>
+        <div class="wrap ph-grid">
+            <div class="ph-copy hero-content">
+                <nav class="crumbs" aria-label="Breadcrumb"><a href="<?= e(cfg('website_home')) ?>">Home</a><span class="sep" aria-hidden="true">/</span><a href="ealbum.html">eAlbum</a><span class="sep" aria-hidden="true">/</span><span aria-current="page"><?= e($names) ?></span></nav>
+                <p class="eyebrow">The wedding celebration of</p>
+                <h1 class="couple-names" id="couple-title">
+                    <?php if (trim((string) $client['bride']) !== '' && trim((string) $client['groom']) !== ''): ?>
+                        <span class="name"><?= e(trim((string) $client['bride'])) ?></span>
+                        <span class="heart" role="img" aria-label="and"><?= icon('heart') ?></span>
+                        <span class="name"><?= e(trim((string) $client['groom'])) ?><span class="dot">.</span></span>
+                    <?php else: ?>
+                        <span class="name"><?= e($names) ?><span class="dot">.</span></span>
+                    <?php endif; ?>
+                </h1>
 
-            <?php if ($date !== '' || $place !== ''): ?>
-                <div class="hero-meta">
-                    <?php if ($date !== ''): ?><span><?= icon('calendar') ?><?= e($date) ?></span><?php endif; ?>
-                    <?php if ($place !== ''): ?><span><?= icon('pin') ?><?= e($place) ?></span><?php endif; ?>
+                <?php if ($date !== '' || $place !== ''): ?>
+                    <div class="hero-meta">
+                        <?php if ($date !== ''): ?><span><?= icon('calendar') ?><?= e($date) ?></span><?php endif; ?>
+                        <?php if ($place !== ''): ?><span><?= icon('pin') ?><?= e($place) ?></span><?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($client['events']): ?>
+                    <ul class="event-pills" aria-label="Wedding events">
+                        <?php foreach ($client['events'] as $i => $event): ?>
+                            <li class="pill tone-<?= e(event_tone((string) $event, $i)) ?>"><?= e($event) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                <?php if ($message !== ''): ?>
+                    <p class="hero-thanks"><?= nl2br(e($message)) ?><span>— <?= e($studio) ?></span></p>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($coverFile): ?>
+                <div class="hero-art" data-drift aria-hidden="true">
+                    <span class="hs-shape"></span>
+                    <img class="hero-img" src="<?= e(media_url('cover', ['v' => filemtime($coverFile)])) ?>" alt="" fetchpriority="high">
                 </div>
             <?php endif; ?>
-
-            <?php if ($client['events']): ?>
-                <ul class="event-pills" aria-label="Wedding events">
-                    <?php foreach ($client['events'] as $i => $event): ?>
-                        <li class="pill tone-<?= e(event_tone((string) $event, $i)) ?>"><?= e($event) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-
-            <?php if ($message !== ''): ?>
-                <p class="hero-thanks"><?= nl2br(e($message)) ?><span>— <?= e($studio) ?></span></p>
-            <?php endif; ?>
         </div>
-
-        <a class="scroll-down" href="#album"><span>Scroll down</span><?= icon('chevron-down') ?></a>
     </section>
+
+    <!-- Album sections: a small bar that stays at the top of the screen while the album scrolls -->
+    <nav class="album-nav" id="topbar" aria-label="Album sections">
+        <div class="an-pill">
+            <span class="an-names"><?= icon('heart') ?><?= e($names) ?></span>
+            <div class="top-links">
+                <a href="#album">Album</a>
+                <?php if ($videos): ?><a href="#films">Films</a><?php endif; ?>
+                <a href="#photos">Photos</a>
+            </div>
+            <a class="an-exit" href="<?= e($exit['href']) ?>" aria-label="<?= e($exit['label']) ?>" title="<?= e($exit['label']) ?>"><?= icon($exit['icon']) ?><span><?= e($exit['label']) ?></span></a>
+        </div>
+    </nav>
 
     <!-- ============ 2. PDF album as a book ============ -->
     <section class="section section-book" id="album">
@@ -182,9 +191,9 @@ page_headers();
         <?php endif; ?>
     </section>
 
-    <!-- ============ 3. Films ============ -->
+    <!-- ============ 3. Films (on cream, like the home page's services) ============ -->
     <?php if ($videos): ?>
-        <section class="section section-films" id="films">
+        <section class="section section-films light" id="films">
             <div class="section-head reveal">
                 <span class="kicker">Watch again</span>
                 <h2>Your wedding films<span class="dot">.</span></h2>
@@ -242,31 +251,33 @@ page_headers();
             </div>
         <?php endif; ?>
     </section>
+
+    <!-- ============ 5. Thank you: an orange band like the home page's bookings banner ============ -->
+    <section class="thanks-sec" aria-labelledby="thanks-title">
+        <div class="wrap">
+            <div class="thanks-band reveal">
+                <div class="tb-copy">
+                    <p class="eyebrow">With love</p>
+                    <h2 id="thanks-title">Thank you for choosing <?= e($studio) ?><span class="dot">.</span></h2>
+                    <p>It was an honour to capture your special day. We would love to hear from you!</p>
+                    <div class="cta-row">
+                        <a class="pbtn dark" href="<?= e(whatsapp_link('Hello ' . $studio . '! We just saw our wedding album.')) ?>" target="_blank" rel="noopener"><?= icon('chat') ?>Message us on WhatsApp</a>
+                        <a class="pbtn line" href="<?= e($exit['href']) ?>"><?= icon($exit['icon']) ?><?= e($exit['label']) ?></a>
+                    </div>
+                </div>
+                <span class="tb-ic" aria-hidden="true"><?= icon('heart') ?></span>
+            </div>
+        </div>
+    </section>
 </main>
 
-<!-- ============ 5. Footer ============ -->
-<footer class="album-footer">
-    <span class="footer-badge" aria-hidden="true"><?= icon('aperture') ?></span>
-    <p class="footer-thanks">Thank you for choosing <?= e($studio) ?><span class="dot">.</span></p>
-    <p class="footer-sub">It was an honour to capture your special day. We would love to hear from you!</p>
-    <div class="footer-social">
-        <a class="wa" href="<?= e(whatsapp_link('Hello ' . $studio . '! We just saw our wedding album.')) ?>" target="_blank" rel="noopener"><?= icon('chat') ?>WhatsApp</a>
-        <a href="<?= e(cfg('instagram')) ?>" target="_blank" rel="noopener">Instagram</a>
-        <a href="<?= e(cfg('facebook')) ?>" target="_blank" rel="noopener">Facebook</a>
-        <a href="<?= e(cfg('youtube')) ?>" target="_blank" rel="noopener">YouTube</a>
-    </div>
-    <?php if (!$preview): ?>
-        <a class="btn-logout btn-logout-light" href="logout.php"><?= icon('logout') ?><span>Log out</span></a>
-    <?php endif; ?>
-    <small>© <?= date('Y') ?> <?= e($studio) ?></small>
-    <p class="footer-word" aria-hidden="true">DEVESH</p>
-</footer>
+<?php site_footer(); ?>
 
 <button class="to-top" type="button" id="toTop" aria-label="Back to top"><?= icon('arrow-up') ?></button>
 
 <?php if ($preview): ?>
     <div class="preview-bar"><?= icon('eye') ?><span>Admin preview</span>
-        <a href="admin.php?view=edit&amp;c=<?= e(rawurlencode($client['slug'])) ?>">Back to admin</a></div>
+        <a href="<?= e($adminBack) ?>">Back to admin</a></div>
 <?php endif; ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -278,6 +289,7 @@ page_headers();
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
 <?php endif; ?>
 <script>window.ALBUM = <?= json_encode($albumData, $json) ?>;</script>
+<script src="album-assets/js/site.js?v=<?= $v ?>"></script>
 <script src="album-assets/js/album.js?v=<?= $v ?>"></script>
 <?php if ($pdfFile): ?>
 <script type="module" src="album-assets/js/flipbook.js?v=<?= $v ?>"></script>

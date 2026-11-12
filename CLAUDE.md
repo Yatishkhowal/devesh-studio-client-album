@@ -123,15 +123,18 @@ Pinned CDN versions:
 - **jsDelivr:** page-flip 2.0.7, pdfjs-dist 4.10.38 (legacy build), canvas-confetti 1.9.3.
 - **Google Fonts:** Bricolage Grotesque and Inter on the login and album pages; Josefin Sans in the admin.
 
-**Icons (login and album).** Line icons live in `album-assets/img/icons.svg` as `<symbol id="i-NAME">`. PHP prints one with `icon('NAME')` (bootstrap.php), which references the file with `?v=ASSET_VERSION`. Scripts that change an icon swap the `<use>` href's `#i-NAME` (`setIcon()` in flipbook.js, the eye button on the login page), because an SVG's `className` can't be assigned in an ES module.
+**Icons (login and album).** Line icons live in `album-assets/img/icons.svg` as `<symbol id="i-NAME">`. PHP prints one with `icon('NAME')`, or `icon('NAME', 'extra-class')` (bootstrap.php), which references the file with `?v=ASSET_VERSION`. Scripts that change an icon swap the `<use>` href's `#i-NAME` (`setIcon()` in flipbook.js, the eye button on the login page), because an SVG's `className` can't be assigned in an ES module.
 
 ## Constraints and conventions
 
 - Keep PHP 7.4 syntax: no `match`, no `str_contains`/`str_starts_with`, no nullsafe `?->`, no named arguments, no union types.
-- Design rules (changed 2026-11-11 to match the new main website in `D:\Y_Claude\devesh-home`):
+- Design rules (changed 2026-11-12 so the login and album pages are inner pages of the new main website, github.com/yatish6153-hue/devesh-studio-website, local copy `D:\Y_Claude\devesh-home`):
   - Bricolage Grotesque for headings and the couple's names; Inter for everything else.
   - Palette: ink `#0d0a08` with cream `#fff5ea` text; saffron `#ff7a1a`, marigold `#ffb23e`, chilli `#e0401a` and deep `#7a2208` accents.
-  - The login page and the album banner use the website's orange "stage" (radial saffron gradient with grain); sections are dark. The cover sits in the website's rounded-top arch, and the top bar is the website's dashed pill.
+  - Both pages have the website's header and footer, printed by `site_header()` / `site_footer()` in `album-core/layout.php`. The header has the logo (`album-assets/img/logo.svg`, a copy of the website's), the dashed menu pill with eAlbum marked current, and one button: Get in touch on the login page, Log out in the album (Back to admin in a preview). When the website's menu or footer changes, change `layout.php` to match.
+  - Their styles are `album-assets/css/site.css`, a copy of the parts of the website's `css/site.css` the pages use (tokens, buttons, header, the inner-page banner `.page-hero` in the home page's orange, breadcrumb, footer). It loads before `login.css` / `album.css`, so the eAlbum looks right even before the new website is uploaded. `album-assets/js/site.js` runs the mobile menu and the banner picture's drift under the mouse (`data-drift`).
+  - Login: the welcome text on the banner's left and the login card on its right.
+  - Album: the banner has the breadcrumb, names, date, venue, events and message on the left. The cover sits on the right in the website's rounded-top arch over its orange circle. Under the banner, the album bar (`#topbar`: names, Album · Films · Photos, Log out) sticks to the top of the screen; album.js adds `is-stuck` once it sticks. The films section is cream (`.light`, like the home page's services), and a thank-you band like the home page's orange bookings banner sits before the footer.
   - Event tag colours come from `event_tone()`, which knows common Rajasthani wedding events. Its pink/orange/purple/teal/yellow names are mapped in album.css to the saffron family.
   - The admin panel (`admin.php`, `admin.css`) keeps its own earlier look.
 - Private pages send `noindex` and must never include the main site's AdSense script.
