@@ -9,7 +9,7 @@ return [
     'studio_name'    => 'Devesh Studio',
     'studio_tagline' => 'A Complete Design Solution',
     'logo'           => 'images/logo.png',     // your existing website logo
-    'favicon'        => 'images/favicon.png',
+    'favicon'        => 'album-assets/img/favicon.svg',   // browser tab icon (a copy of the website's images/favicon.svg)
     'website_home'   => 'index.html',
     'timezone'       => 'Asia/Kolkata',
 
